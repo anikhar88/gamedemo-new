@@ -49,8 +49,7 @@ public class GameRestController implements ErrorController {
                 + "\t\t\t\t\"\\\"heading\\\": \\\"Player 1\\\",\\n\" +\n"
                 + "\t\t\t\t\"\\\"message\\\": \\\"Awaiting Player 1's Move\\\"\\n\" +\n" + "\t\t\t\t\"} }");
 
-        return "{\n" + "    \"msg\": \"INITIALIZE\",\n" + "    \"body\": {\n" + "\"newLine\": null,\n"
-                + "\"heading\": \"Player 1\",\n" + "\"message\": \"Awaiting Player 1's Move\"\n" + "} }";
+        return "{ \"msg\": \"INITIALIZE\", \"body\": { \"newLine\": null, \"heading\": \"Player 1\", \"message\": \"Awaiting Player 1's Move\" } }";
     }
 
     private void resetMap() {
@@ -168,7 +167,7 @@ public class GameRestController implements ErrorController {
 
     @RequestMapping("/error")
     String gameError() {
-        return "{\n" + "    \"error\": \"Invalid type for `id`: Expected INT but got a STRING\"\n" + "}";
+        return "{\n" + " \"error\": \"Invalid type for `id`: Expected INT but got a STRING\"\n" + "}";
     }
 
     private Response getResponse(String msg, String heading, Point start, Point end, String bodyMsg) {
