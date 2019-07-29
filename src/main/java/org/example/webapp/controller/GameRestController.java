@@ -38,7 +38,7 @@ public class GameRestController implements ErrorController {
      */
     @RequestMapping("/initialize")
     public String initialize() {
-        // state = new HashMap<>();
+
         availableAdjuscentPoints = getAdjuscentNodeService.getPoints();
         adjuscentPoints = getAdjuscentNodeService.getPoints();
         resetMap();
@@ -89,11 +89,7 @@ public class GameRestController implements ErrorController {
 
         Integer clickCount = (Integer) state.get(Constants.STATE_CLICK_COUNT) + 1;
         state.put(Constants.STATE_CLICK_COUNT, clickCount);
-        /*
-         * // If no node available from start and end node : game over if
-         * (isNodeAvailable() && isNotDiagonalNode(point)) { return
-         * gameOverResponse(point); }
-         */
+
         // To Identify first/second click
         if (clickCount % 2 == 0) {
             state.put(Constants.IS_FIRST_MOVE, false);
@@ -159,8 +155,6 @@ public class GameRestController implements ErrorController {
             return getResponse(Constants.VALID_START_NODE, getPlayer(), start, end, msg);
         }
 
-        // user selected already from the start or end node
-        // then we need to update start and end in the current state.
         return null;
 
     }
@@ -170,6 +164,15 @@ public class GameRestController implements ErrorController {
         return "{\n" + " \"error\": \"Invalid type for `id`: Expected INT but got a STRING\"\n" + "}";
     }
 
+    /**
+     * Returns the response for the node-clicked api
+     * @param msg - message
+     * @param heading - heading
+     * @param start - start point
+     * @param end - end point
+     * @param bodyMsg - body message
+     * @return returns Response object to the caller.
+     */
     private Response getResponse(String msg, String heading, Point start, Point end, String bodyMsg) {
         Response resp = new Response();
         resp.setMsg(msg);
@@ -189,6 +192,10 @@ public class GameRestController implements ErrorController {
 
     }
 
+    /**
+     * Overriding error path for the spring boot application to customize it.
+     * @return
+     */
     @Override
     public String getErrorPath() {
         return "/error";
@@ -230,6 +237,12 @@ public class GameRestController implements ErrorController {
         findAndUpdateAdjuscentNode((Point) state.get(Constants.STATE_NODE_LAST));
     }
 
+    /**
+     * This method helps to find not visited node for the incoming Point
+     *
+     * @param node : Point with x and y co-ordinates
+     * @return : returns the list of non visited node
+     */
     private List<Point> findNotVisitedNode(Point node) {
         List<Point> adjuscentPoint = (List<Point>) availableAdjuscentPoints.get(node);
         List<Point> availableNodes = new ArrayList<Point>();
@@ -241,10 +254,14 @@ public class GameRestController implements ErrorController {
                     availableNodes.add(p);
             }
         }
-
         return availableNodes;
     }
 
+    /**
+     * This method helps to find the adjuscent node for the passed Point
+     * @param node : x and y co-ordinates
+     * @return : returns true if passed Point has adjuscent to it.
+     */
     private boolean findAndUpdateAdjuscentNode(Point node) {
         List<Point> adjuscentPoint = (List<Point>) adjuscentPoints.get(node);
         List<Point> availablePoint = (List<Point>) availableAdjuscentPoints.get(node);
@@ -280,6 +297,11 @@ public class GameRestController implements ErrorController {
         }
     }
 
+    /**
+     * Gets the Player name
+     *
+     * @return : returns the Player name
+     */
     private String getPlayer() {
         Integer player = (Integer) state.get(Constants.PLAYER);
         return Constants.PLAYER_NAME.toString() + player;
